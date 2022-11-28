@@ -1,12 +1,10 @@
 package com.example.tictactoe;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.appcompat.widget.Toolbar;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private boolean isXPlayerTurn = true;
@@ -33,14 +31,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void playTurn(View view) {
-        applyTurnToButton((Button) view);
+        applyPlayerMoveButton((Button) view);
         changeTurns();
         checkForWin();
     }
 
-    private void applyTurnToButton(Button view) {
-        view.setBackground(AppCompatResources.getDrawable(this,
-                isXPlayerTurn ? R.drawable.x : R.drawable.o));
+    private void applyPlayerMoveButton(Button view) {
+        view.setBackgroundResource(isXPlayerTurn ? R.drawable.x : R.drawable.o);
         view.setText(isXPlayerTurn ? R.string.x : R.string.o);
         view.setTextColor(getResources().getColor(R.color.transparent, getTheme()));
     }
@@ -52,14 +49,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setScoreBar(int drawableId) {
         Toolbar scoreBar = findViewById(R.id.scorebar);
-        scoreBar.setBackground(AppCompatResources.getDrawable(this, drawableId));
+        scoreBar.setBackgroundResource(drawableId);
     }
 
     private void checkForWin() {
         int[][] winningPositions = {{1,2,3},{4,5,6},{7,8,9},{1,4,7},{2,5,8},{3,6,9},{1,5,9},{3,5,7}};
         for (int[] winOption: winningPositions) {
             if (isWin(winOption)) {
-                setScoreBar(getButton(winOption[0]).getText().equals(getResources().getString(R.string.x)) ? R.drawable.xwin : R.drawable.owin);
+                setScoreBar(getButton(winOption[0]).getText().equals(
+                        getResources().getString(R.string.x)) ? R.drawable.xwin : R.drawable.owin);
+                getButton(R.id.buttonplay).setVisibility(View.VISIBLE);
+
             }
         }
     }
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View v) {
-        this.playTurn(v);
+    public void onClick(View view) {
+        playTurn(view);
     }
 }
