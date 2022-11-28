@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (isWin(winOption)) {
                 setScoreBar(getButton(winOption[0]).getText().equals(
                         getResources().getString(R.string.x)) ? R.drawable.xwin : R.drawable.owin);
-                getButton(R.id.buttonplay).setVisibility(View.VISIBLE);
+                findViewById(R.id.buttonplay).setVisibility(View.VISIBLE);
 
             }
         }
