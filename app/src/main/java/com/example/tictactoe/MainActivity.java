@@ -18,9 +18,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void createButtonsListeners() {
+        addPlayListenersToButtons();
+        findViewById(R.id.buttonplay).setOnClickListener(this::restartGame);
+    }
+
+    private void addPlayListenersToButtons() {
         for (int i = 1; i <= 9; i++) {
             Button btn = getButton(i);
             btn.setOnClickListener(this::playTurn);
+        }
+    }
+
+    private void disableButtonsClick() {
+        for (int i = 1; i <= 9; i++) {
+            Button btn = getButton(i);
+            btn.setClickable(false);
         }
     }
 
@@ -31,15 +43,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void playTurn(View view) {
-        applyPlayerMoveButton((Button) view);
-        changeTurns();
-        checkForWin();
+        if (((Button)view).getText().equals("")) {
+            applyPlayerMoveButton((Button) view);
+            changeTurns();
+            checkForWin();
+        }
     }
 
-    private void applyPlayerMoveButton(Button view) {
-        view.setBackgroundResource(isXPlayerTurn ? R.drawable.x : R.drawable.o);
-        view.setText(isXPlayerTurn ? R.string.x : R.string.o);
-        view.setTextColor(getResources().getColor(R.color.transparent, getTheme()));
+    private void restartGame(View replayButton) {
+        resetToolbars(replayButton);
+        resetButtons();
+    }
+
+    private void resetButtons() {
+        for (int i = 1; i <= 9; i++) {
+            Button btn = getButton(i);
+            btn.setBackgroundResource(R.color.transparent);
+            btn.setText("");
+            btn.setClickable(true);
+        }
+    }
+
+    private void resetToolbars(View replayButton) {
+        replayButton.setVisibility(View.INVISIBLE);
+        isXPlayerTurn = true;
+        setScoreBar(R.drawable.xplay);
+    }
+
+    private void applyPlayerMoveButton(Button button) {
+        button.setBackgroundResource(isXPlayerTurn ? R.drawable.x : R.drawable.o);
+        button.setText(isXPlayerTurn ? R.string.x : R.string.o);
+        button.setTextColor(getResources().getColor(R.color.transparent, getTheme()));
     }
 
     private void changeTurns() {
@@ -56,12 +90,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int[][] winningPositions = {{1,2,3},{4,5,6},{7,8,9},{1,4,7},{2,5,8},{3,6,9},{1,5,9},{3,5,7}};
         for (int[] winOption: winningPositions) {
             if (isWin(winOption)) {
-                setScoreBar(getButton(winOption[0]).getText().equals(
-                        getResources().getString(R.string.x)) ? R.drawable.xwin : R.drawable.owin);
-                findViewById(R.id.buttonplay).setVisibility(View.VISIBLE);
-
+                handleWin(winOption);
             }
         }
+    }
+
+    private void handleWin(int[] winPosition) {
+        setScoreBar(getButton(winPosition[0]).getText().equals(
+                getResources().getString(R.string.x)) ? R.drawable.xwin : R.drawable.owin);
+        findViewById(R.id.buttonplay).setVisibility(View.VISIBLE);
+        disableButtonsClick();
     }
 
     private boolean isWin(int[] option) {
