@@ -60,7 +60,8 @@
             android:translationZ="10dp"
             app:layout_constraintEnd_toStartOf="@+id/linearLayoutVertical3"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/linearLayoutVertical1"
