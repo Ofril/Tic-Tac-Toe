@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void restartGame(View replayButton) {
-        resetToolbars(replayButton);
+        resetViews(replayButton);
         resetButtons();
     }
 
@@ -64,10 +64,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void resetToolbars(View replayButton) {
+    private void resetViews(View replayButton) {
         replayButton.setVisibility(View.INVISIBLE);
         isXPlayerTurn = true;
         setScoreBar(R.drawable.xplay);
+        setWinningViewBackground(R.color.transparent);
     }
 
     private void applyPlayerMoveButton(Button button) {
@@ -87,10 +88,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void checkForWin() {
-        int[][] winningPositions = {{1,2,3},{4,5,6},{7,8,9},{1,4,7},{2,5,8},{3,6,9},{1,5,9},{3,5,7}};
+        int[][] winningPositions = {{1,2,3, R.drawable.mark3},{4,5,6, R.drawable.mark4},
+                {7,8,9, R.drawable.mark5}, {1,4,7, R.drawable.mark6},{2,5,8, R.drawable.mark7},
+                {3,6,9, R.drawable.mark8}, {1,5,9, R.drawable.mark1},{3,5,7, R.drawable.mark2}};
         for (int[] winOption: winningPositions) {
             if (isWin(winOption)) {
                 handleWin(winOption);
+                return;
             }
         }
     }
@@ -99,7 +103,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setScoreBar(getButton(winPosition[0]).getText().equals(
                 getResources().getString(R.string.x)) ? R.drawable.xwin : R.drawable.owin);
         findViewById(R.id.buttonplay).setVisibility(View.VISIBLE);
+        setWinningViewBackground(winPosition[3]);
         disableButtonsClick();
+    }
+
+    private void setWinningViewBackground(int winPosition) {
+        View winningView = findViewById(R.id.winning_view);
+        winningView.setBackgroundResource(winPosition);
     }
 
     private boolean isWin(int[] option) {
