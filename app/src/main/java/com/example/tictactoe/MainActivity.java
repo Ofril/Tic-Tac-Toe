@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private boolean isXPlayerTurn = true;
+    private int plays = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void playTurn(View view) {
         if (((Button)view).getText().equals("")) {
+            plays++;
             applyPlayerMoveButton((Button) view);
             changeTurns();
             checkForWin();
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void restartGame(View replayButton) {
         resetViews(replayButton);
         resetButtons();
+        plays = 0;
     }
 
     private void resetButtons() {
@@ -91,11 +94,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int[][] winningPositions = {{1,2,3, R.drawable.mark3},{4,5,6, R.drawable.mark4},
                 {7,8,9, R.drawable.mark5}, {1,4,7, R.drawable.mark6},{2,5,8, R.drawable.mark7},
                 {3,6,9, R.drawable.mark8}, {1,5,9, R.drawable.mark1},{3,5,7, R.drawable.mark2}};
+
         for (int[] winOption: winningPositions) {
             if (isWin(winOption)) {
                 handleWin(winOption);
                 return;
             }
+        }
+
+        checkForTie();
+    }
+
+    private void checkForTie() {
+        if (plays == 9) {
+            setScoreBar(R.drawable.nowin);
+            findViewById(R.id.buttonplay).setVisibility(View.VISIBLE);
+            disableButtonsClick();
         }
     }
 
@@ -103,8 +117,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setScoreBar(getButton(winPosition[0]).getText().equals(
                 getResources().getString(R.string.x)) ? R.drawable.xwin : R.drawable.owin);
         findViewById(R.id.buttonplay).setVisibility(View.VISIBLE);
-        setWinningViewBackground(winPosition[3]);
         disableButtonsClick();
+        setWinningViewBackground(winPosition[3]);
     }
 
     private void setWinningViewBackground(int winPosition) {
